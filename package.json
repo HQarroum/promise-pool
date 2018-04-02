@@ -1,0 +1,21 @@
+{
+  "name": "promise-pool",
+  "version": "1.0.0",
+  "description": "A Promise pool implementation supporting sequential execution of promises across a pool, following different strategies.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "promise",
+    "pool"
+  ],
+  "author": "Halim Qarroum",
+  "license": "MIT",
+  "dependencies": {
+    "fastpriorityqueue": "^0.3.1"
+  }
+}
