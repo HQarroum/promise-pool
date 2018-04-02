@@ -4,7 +4,7 @@
 	<br>
 	<br>
 	<br>
-	<img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/logo.png" alt="styleshift">
+	<img width="900" src="https://github.com/HQarroum/promise-pool/raw/master/assets/logo.png" alt="styleshift">
 	<br>
 	<br>
 	<br>
