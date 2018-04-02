@@ -51,10 +51,6 @@ const Pool = require('promise-pool');
 The promise pool can be instanciated using the constructor function returned by `require`.
 
 ```js
-/**
- * Creating a pool of five promises using
- * the default constructor.
- */
 const Pool = require('promise-pool');
 const pool = new Pool(5);
 ```
@@ -62,16 +58,54 @@ const pool = new Pool(5);
 It can also patch the existing `Promise` function for further use within the module.
 
 ```js
-/**
- * Patching the `Promise` object with
- * a `Pool` object.
- */
-Pool.patch(Promise);
-const pool = new Promise.Pool(5);
+const Pool = require('promise-pool');
+
+// Patch the global `Promise` object.
+if (Pool.patch()) {
+  const pool = new Promise.Pool(5);
+}
 ```
 
 > Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if patching failed.
 
-### Configuring the pool
+### Introducing strategies
 
+In order to allow users of this library to choose how to balance the execution of promises within the pool, the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has been used to inject external behaviors at runtime. There are 3 built-in strategies already implemented, but you can also provide your own implementation in the context of advanced use-cases.
+
+#### Round-robin strategy
+
+This is the default strategy which is loaded by the pool when no particular strategies have been specified. Its behavior is simple, promises will be sequentially inserted in the pool starting from the first promise in the pool to the latest, while looping to the first one when every promises have been used.
+
+Note that while the insertion is sequential, the execution of the promises may not be linearly sequential as this depends on the type of process the promise function are executing.
+
+If you'd like to explicitely specify the `round-robin` strategy, you can pass an option object to the `Pool` constructor:
+
+```js
+const pool = new Pool({
+  size: 5,
+  strategy: 'round-robin'
+});
+```
+
+#### Random strategy
+
+The `random` strategy will randomly insert new scheduled promises at a random index in the pool. The distribution of executed promises within the pool mainly depend on the quality of the randomness seed.
+
+```js
+const pool = new Pool({
+  size: 5,
+  strategy: 'random'
+});
+```
+
+#### Load balancer strategy
+
+The `load-balancer` strategy actually computes the amount of load for each promises in the pool by keeping a count of the queued promises on each promise of the pool. This comes in handy when your promises are executing operations in a non-deterministic time (e.g network requests) to optimize the execution of a maximum amount of promises in the smallest possible time.
+
+```js
+const pool = new Pool({
+  size: 5,
+  strategy: 'load-balancer'
+});
+```
 
