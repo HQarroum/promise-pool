@@ -4,7 +4,7 @@
 	<br>
 	<br>
 	<br>
-	<img width="600" src="https://github.com/HQarroum/scoped-injector/raw/master/docs/icon.png" alt="styleshift">
+	<img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/logo.png" alt="styleshift">
 	<br>
 	<br>
 	<br>
