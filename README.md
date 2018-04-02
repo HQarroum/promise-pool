@@ -34,9 +34,9 @@ npm install --save promise-pool
 
 ## Description
 
-This module implements a promise pool implementation which allows developers to execute sequentially multiple functions returning a promise, across a promise pool of dynamic size.
+This module provides a [promise](https://scotch.io/tutorials/javascript-promises-for-dummies) pool implementation which allows developers to sequentially execute multiple functions returning a promise, across a promise pool of dynamic size.
 
-Use-cases associated with this module can be multiple and can range from operations such as rate limiting (e.g when it is necessary to throttle the amount of concurrent requests issued against a given service), sequential promise execution enforcement, segmentation of execution of promises, etc.
+Use-cases associated with this module can be multiple and range from operations such as rate limiting (e.g when it is necessary to throttle the amount of concurrent requests issued against a given service), to basic sequential promise execution, segmentation of execution of promises, etc.
 
 ## Usage
 
@@ -55,15 +55,14 @@ const Pool = require('promise-pool');
 const pool = new Pool(5);
 ```
 
-It can also patch the existing `Promise` function for further use within the module.
+It can also patch the existing `Promise` function for further use within your application.
 
 ```js
 const Pool = require('promise-pool');
 
 // Patch the global `Promise` object.
-if (Pool.patch()) {
-  const pool = new Promise.Pool(5);
-}
+Pool.patch();
+const pool = new Promise.Pool(5);
 ```
 
 > Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if patching failed.
@@ -74,11 +73,11 @@ In order to allow users of this library to choose how to balance the execution o
 
 #### Round-robin strategy
 
-This is the default strategy which is loaded by the pool when no particular strategies have been specified. Its behavior is simple, promises will be sequentially inserted in the pool starting from the first promise in the pool to the latest, while looping to the first one when every promises have been used.
+This is the default strategy which is loaded by the pool when no strategies have been specified. Its behavior is simple, promises will be sequentially inserted in the pool starting from the first promise in the pool to the latest, while looping to the first one once every promises have been used.
 
-Note that while the insertion is sequential, the execution of the promises may not be linearly sequential as this depends on the type of process the promise function are executing.
+Note that while the insertion is sequential, the execution of the promises may not be sequential as this depends on the type of process your promises are executing.
 
-If you'd like to explicitely specify the `round-robin` strategy, you can pass an option object to the `Pool` constructor:
+If you'd like to explicitely specify the `round-robin` strategy, you can do so by passing an option object to the `Pool` constructor:
 
 ```js
 const pool = new Pool({
@@ -89,7 +88,7 @@ const pool = new Pool({
 
 #### Random strategy
 
-The `random` strategy will randomly insert new scheduled promises at a random index in the pool. The distribution of executed promises within the pool mainly depend on the quality of the randomness seed.
+The `random` strategy will insert new scheduled promises at a random index in the pool. The distribution of executed promises within the pool mainly depends on the quality of the randomness seed associated with `Math.random()`.
 
 ```js
 const pool = new Pool({
@@ -100,7 +99,7 @@ const pool = new Pool({
 
 #### Load balancer strategy
 
-The `load-balancer` strategy actually computes the amount of load for each promises in the pool by keeping a count of the queued promises on each promise of the pool. This comes in handy when your promises are executing operations in a non-deterministic time (e.g network requests) to optimize the execution of a maximum amount of promises in the smallest possible time.
+The `load-balancer` strategy actually computes the amount of load for each promises in the pool by keeping a count of the queued promises on each promise of the pool. This comes in handy when your promises are executing operations in a non-deterministic time (e.g network requests) to optimize the execution of a maximum amount of promises in the smallest possible amount of time.
 
 ```js
 const pool = new Pool({
