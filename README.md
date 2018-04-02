@@ -20,9 +20,8 @@
 
 - [Installation](#installation)
 - [Description](#description)
-- [Proposal](#proposal)
 - [Usage](#usage)
-- [Plugins](#plugins)
+- [Examples](#examples)
 - [See also](#see-also)
 
 ## Installation
@@ -33,6 +32,38 @@
 npm install --save promise-pool
 ```
 
-
 ## Description
+
+This module implements a promise pool implementation which allows developers to execute sequentially multiple functions returning a promise, across a promise pool of dynamic size.
+
+Use-cases associated with this module can be multiple and can range from operations such as rate limiting (e.g when it is necessary to throttle the amount of concurrent requests issued against a given service), sequential promise execution enforcement, segmentation of execution of promises, etc.
+
+## Usage
+
+To include the `promise-pool` module into your application, you must first include it as follow.
+
+```js
+const Pool = require('promise-pool');
+```
+
+### Instantiating the pool
+
+The promise pool can be instanciated using the constructor function returned by `require`, or it can also patch the existing `Promise` function.
+
+```js
+const Pool = require('promise-pool');
+
+// Creating a pool of five promises.
+let pool = new Pool(5);
+
+// Patching the `Promise` object.
+Pool.patch(Promise);
+pool = new Promise.Pool(5);
+```
+
+> Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if patching failed.
+```
+
+### Configuring the pool
+
 
