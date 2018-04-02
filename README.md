@@ -18,6 +18,8 @@
 
 ## Table of contents
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/HQarroum/promise-pool.svg?token=2031f14ddac2fd574d4418aa9d86aff8fb70c4242d5ac4f7de530970f7c5206e&ts=1522635862973)](https://greenkeeper.io/)
+
 - [Installation](#installation)
 - [Description](#description)
 - [Proposal](#proposal)
