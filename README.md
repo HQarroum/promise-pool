@@ -51,18 +51,24 @@ const Pool = require('promise-pool');
 The promise pool can be instanciated using the constructor function returned by `require`, or it can also patch the existing `Promise` function.
 
 ```js
+/**
+ * Creating a pool of five promises using
+ * the default constructor.
+ */
 const Pool = require('promise-pool');
-
-// Creating a pool of five promises.
 let pool = new Pool(5);
+```
 
-// Patching the `Promise` object.
+```js
+/**
+ * Patching the `Promise` object with
+ * a `Pool` object.
+ */
 Pool.patch(Promise);
 pool = new Promise.Pool(5);
 ```
 
 > Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if patching failed.
-```
 
 ### Configuring the pool
 
