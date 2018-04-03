@@ -112,9 +112,9 @@ const pool = new Pool(opts);
 
 The core of this module is of course to allow scheduling of promises within the pool. To do so, two methods exists that provides two different interfaces associated with how you'd like to handle the result of your promises.
 
-#### The `.schedule()` api
+#### The `.schedule()` API
 
-The `.schedule()` API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
+This API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
 
 ```js
 const pool = new Pool(5);
@@ -127,14 +127,49 @@ const onExecuted = () => {
   console.log('Promise successfully executed')
 };
 
+/**
+ * @return functor returning a new promise to execute.
+ */
+const promise = () => new Promise((resolve, reject) => {
+  console.log(`Promise ${i} running`);
+  resolve();
+});
+
 // Spreading 100 promises execution across the pool.
 for (let i = 0; i < 100; ++i) {
-  pool.schedule(() => new Promise((resolve) => {
-    console.log(`Promise ${i} running`);
-    resolve();
-  }).then(onExecuted));
+  pool.schedule(promise).then(onExecuted));
 }
 ```
+
+#### The `.enqueue` API
+
+This API works like `.schedule()` in that it will enqueue a promise execution in the available pool of promises, but unlike `.schedule()` it will return a promise which is resolved (or rejected) once the initial promise has been executed.
+
+```js
+const pool = new Pool(5);
+
+/**
+ * Called back when a promise function has
+ * successfully be executed.
+ */
+const onExecuted = () => {
+  console.log('Promise successfully executed')
+};
+
+/**
+ * @return functor returning a new promise to execute.
+ */
+const promise = () => new Promise((resolve, reject) => {
+  console.log(`Promise ${i} running`);
+  resolve();
+});
+
+pool.enqueue(promise).then(promise).then(() => {
+  console.log('Executed two promises');
+});
+```
+
+
 ### Patching the `Promise` object
 
 For commodity, it is possible to patch the existing `Promise` function with the `Pool` object for further use within your application.
