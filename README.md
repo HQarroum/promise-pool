@@ -116,15 +116,7 @@ The core of this module is of course to allow scheduling of promises within the 
 This API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
 
 ```js
-/**
- * @return a functor creating a new promise to execute.
- */
-const promise = (idx) => new Promise((resolve) => {
-  console.log(`Promise ${idx} running`);
-  resolve(idx);
-}).then(onExecuted);
-
-// Spreads 100 promises execution across the pool.
+// Spreads 100 promise executions across the pool.
 for (let i = 0; i < 100; ++i) {
   pool.schedule(promise(i));
 }
