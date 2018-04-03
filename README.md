@@ -55,18 +55,6 @@ const Pool = require('promise-pool');
 const pool = new Pool(5);
 ```
 
-It can also patch the existing `Promise` function for further use within your application.
-
-```js
-const Pool = require('promise-pool');
-
-// Patch the global `Promise` object.
-Pool.patch();
-const pool = new Promise.Pool(5);
-```
-
-> Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if patching failed.
-
 ### Introducing strategies
 
 In order to allow users of this library to choose how to balance the execution of promises within the pool, the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has been used to inject external behaviors at runtime. There are 3 built-in strategies already implemented, but you can also provide your own implementation in the context of advanced use-cases.
@@ -131,13 +119,33 @@ The `.schedule()` API makes it possible to execute functions returning promise o
 ```js
 const pool = new Pool(5);
 
-// Spreading 1000 promises execution across the pool.
-for (let i = 0; i < 1000; ++i) {
+/**
+ * Called back when a promise function has
+ * successfully be executed.
+ */
+const onExecuted = () => {
+  console.log('Promise successfully executed')
+};
+
+// Spreading 100 promises execution across the pool.
+for (let i = 0; i < 100; ++i) {
   pool.schedule(() => new Promise((resolve) => {
     console.log(`Promise ${i} running`);
     resolve();
-  }).then(() => {
-    console.log('Promise successfully executed');
-  }));
+  }).then(onExecuted));
 }
 ```
+### Patching the `Promise` object
+
+For commodity, it is possible to patch the existing `Promise` function with the `Pool` object for further use within your application.
+
+```js
+const Pool = require('promise-pool');
+
+// Patch the global `Promise` object.
+Pool.patch();
+const pool = new Promise.Pool(5);
+```
+
+> Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if the patching operation failed.
+
