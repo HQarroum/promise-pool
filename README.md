@@ -110,21 +110,13 @@ const pool = new Pool(opts);
 
 ### Scheduling promises
 
-The core of this module is of course to allow scheduling of promises within the pool. To do so, two methods exists that provides two different interfaces associated with how you'd like to handle the result of your promises.
+The core of this module is of course to allow scheduling of promises within the pool. To do so, different methods exists that provides different interfaces associated with different use-cases. The next sections will expose minimal working code for each example. For the sake of simplicity, the boilerplate code will be omitted, in order to get the full examples, have a look at the [examples](https://github.com/HQarroum/promise-pool/edit/master/examples) directory.
 
 #### The `.schedule()` API
 
 This API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
 
 ```js
-/**
- * Called back when a promise function has
- * successfully be executed.
- */
-const onExecuted = (idx) => {
-  console.log(`Promise ${idx} successfully executed !`);
-};
-
 /**
  * @return a functor creating a new promise to execute.
  */
@@ -133,7 +125,7 @@ const promise = (idx) => new Promise((resolve) => {
   resolve(idx);
 }).then(onExecuted);
 
-// Spreading 100 promises execution across the pool.
+// Spreads 100 promises execution across the pool.
 for (let i = 0; i < 100; ++i) {
   pool.schedule(promise(i));
 }
@@ -144,24 +136,6 @@ for (let i = 0; i < 100; ++i) {
 This API works like `.schedule()` in that it will enqueue a promise execution in the available pool of promises, but unlike `.schedule()` it will return a promise which is resolved (or rejected) once the initial promise has been executed.
 
 ```js
-/**
- * Called back when a promise function has
- * successfully be executed.
- */
-const onExecuted = (idx) => {
-  console.log(`Promise ${idx} successfully executed`);
-};
-
-/**
- * @return a functor creating a new promise to execute.
- */
-const promise = (idx) => () => new Promise((resolve) => {
-  setTimeout(() => {
-    console.log(`Promise ${idx} running`);
-    resolve(idx);
-  }, 1000);
-});
-
 // Sequentially enqueuing promises using standard `.then()`.
 pool.enqueue(promise(1))
   .then(onExecuted)
@@ -177,24 +151,6 @@ pool.enqueue(promise(1))
 Sometimes, it is useful to enqueue an array of promises on the same executor, such that it is guaranteed that these promises will be executed sequentially (e.g you would like to run in parallel a sequence of promises which, individually, will each run sequentially within the sequence). To do so, you can use the `.enqueueOnSameExecutor()` API as follow.
 
 ```js
-/**
- * Called back when a promise function has
- * successfully be executed.
- */
-const onExecuted = (idx) => {
-  console.log(`Promise ${idx} successfully executed`);
-};
-
-/**
- * @return a functor creating a new promise to execute.
- */
-const promise = (idx) => () => new Promise((resolve) => {
-  setTimeout(() => {
-    console.log(`Promise ${idx} running`);
-    resolve(idx);
-  }, 1000);
-});
-
 // Sequentially enqueuing promises using standard `.then()`.
 Promise.all([
   pool.enqueueOnSameExecutor([promise(1), promise(2), promise(3)]),
