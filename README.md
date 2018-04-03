@@ -133,8 +133,9 @@ const pool = new Pool(5);
 
 // Spreading 1000 promises execution across the pool.
 for (let i = 0; i < 1000; ++i) {
-  pool.schedule(() => new Promise((rv, rj) => {
+  pool.schedule(() => new Promise((resolve) => {
     console.log(`Promise ${i} running`);
+    resolve();
   }).then(() => {
     console.log('Promise successfully executed');
   }));
