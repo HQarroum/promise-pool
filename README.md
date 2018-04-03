@@ -117,8 +117,6 @@ The core of this module is of course to allow scheduling of promises within the 
 This API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
 
 ```js
-const pool = new Pool(5);
-
 /**
  * Called back when a promise function has
  * successfully be executed.
@@ -146,8 +144,6 @@ for (let i = 0; i < 100; ++i) {
 This API works like `.schedule()` in that it will enqueue a promise execution in the available pool of promises, but unlike `.schedule()` it will return a promise which is resolved (or rejected) once the initial promise has been executed.
 
 ```js
-const pool = new Pool(5);
-
 /**
  * Called back when a promise function has
  * successfully be executed.
@@ -159,17 +155,17 @@ const onExecuted = (idx) => {
 /**
  * @return a functor creating a new promise to execute.
  */
-const promise = (idx) => (timeout) => () => new Promise((resolve) => {
+const promise = (idx) => () => new Promise((resolve) => {
   setTimeout(() => {
     console.log(`Promise ${idx} running`);
     resolve(idx);
-  }, timeout);
+  }, 1000);
 });
 
 // Sequentially enqueuing promises using standard `.then()`.
-pool.enqueue(promise(1)(1000))
+pool.enqueue(promise(1))
   .then(onExecuted)
-  .then(() => pool.enqueue(promise(2)(5000)))
+  .then(() => pool.enqueue(promise(2)))
   .then(onExecuted)
   .then(() => {
     console.log('Execution done !');
@@ -178,10 +174,34 @@ pool.enqueue(promise(1)(1000))
 
 ### Enqueuing on the same executor
 
-Sometimes it is useful to enqueue an array of promises on the same executor, such that it is guaranteed that these promises will be executed sequentially (e.g you would like to run in parallel a sequence of promises which, individually, will each run sequentially within the sequence). To do so, you can use the `.enqueueOnSameExecutor()` API as follow.
+Sometimes, it is useful to enqueue an array of promises on the same executor, such that it is guaranteed that these promises will be executed sequentially (e.g you would like to run in parallel a sequence of promises which, individually, will each run sequentially within the sequence). To do so, you can use the `.enqueueOnSameExecutor()` API as follow.
 
 ```js
+/**
+ * Called back when a promise function has
+ * successfully be executed.
+ */
+const onExecuted = (idx) => {
+  console.log(`Promise ${idx} successfully executed`);
+};
 
+/**
+ * @return a functor creating a new promise to execute.
+ */
+const promise = (idx) => () => new Promise((resolve) => {
+  setTimeout(() => {
+    console.log(`Promise ${idx} running`);
+    resolve(idx);
+  }, 1000);
+});
+
+// Sequentially enqueuing promises using standard `.then()`.
+Promise.all([
+  pool.enqueueOnSameExecutor([promise(1), promise(2), promise(3)]),
+  pool.enqueueOnSameExecutor([promise(4), promise(5), promise(6)])
+]).then((result) => {
+  console.log(`Execution done with ${result}`);
+});
 ```
 
 
