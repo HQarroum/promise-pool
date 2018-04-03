@@ -51,7 +51,6 @@ const Pool = require('promise-pool');
 The promise pool can be instanciated using the constructor function returned by `require`.
 
 ```js
-const Pool = require('promise-pool');
 const pool = new Pool(5);
 ```
 
@@ -138,15 +137,13 @@ This API works like `.schedule()` in that it will enqueue a promise execution in
 ```js
 // Sequentially enqueuing promises using standard `.then()`.
 pool.enqueue(promise(1))
-  .then(onExecuted)
-  .then(() => pool.enqueue(promise(2)))
-  .then(onExecuted)
-  .then(() => {
-    console.log('Execution done !');
+  .then((result) => pool.enqueue(promise(2)))
+  .then((result) => {
+    console.log(`Execution done with ${result}`);
   });
 ```
 
-### Enqueuing on the same executor
+#### The `.enqueueOnSameExecutor` API
 
 Sometimes, it is useful to enqueue an array of promises on the same executor, such that it is guaranteed that these promises will be executed sequentially (e.g you would like to run in parallel a sequence of promises which, individually, will each run sequentially within the sequence). To do so, you can use the `.enqueueOnSameExecutor()` API as follow.
 
@@ -166,8 +163,6 @@ Promise.all([
 For commodity, it is possible to patch the existing `Promise` function with the `Pool` object for further use within your application.
 
 ```js
-const Pool = require('promise-pool');
-
 // Patch the global `Promise` object.
 Pool.patch();
 const pool = new Promise.Pool(5);
