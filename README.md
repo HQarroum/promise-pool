@@ -128,16 +128,16 @@ const onExecuted = () => {
 };
 
 /**
- * @return functor returning a new promise to execute.
+ * @return a functor creating a new promise to execute.
  */
-const promise = () => new Promise((resolve, reject) => {
+const promise = (i) => () => new Promise((resolve) => {
   console.log(`Promise ${i} running`);
   resolve();
 });
 
 // Spreading 100 promises execution across the pool.
 for (let i = 0; i < 100; ++i) {
-  pool.schedule(promise).then(onExecuted));
+  pool.schedule(promise(i)).then(onExecuted));
 }
 ```
 
@@ -157,16 +157,19 @@ const onExecuted = () => {
 };
 
 /**
- * @return functor returning a new promise to execute.
+ * @return a functor creating a new promise to execute.
  */
-const promise = () => new Promise((resolve, reject) => {
+const promise = (i) => () => new Promise((resolve) => {
   console.log(`Promise ${i} running`);
   resolve();
 });
 
-pool.enqueue(promise).then(promise).then(() => {
-  console.log('Executed two promises');
-});
+// Sequentially enqueuing promises using standard `.then()`.
+pool.enqueue(promise(1))
+    .then(pool.enqueue(promise(2))
+    .then(() => {
+      console.log('Execution done !');
+    });
 ```
 
 
