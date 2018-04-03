@@ -108,3 +108,35 @@ const pool = new Pool({
 });
 ```
 
+#### Custom strategies
+
+It is possible to provide a custom implementation of a promise scheduler into the pool constructor by passing it the instance of your scheduler.
+
+```js
+const opts = { size: 5 };
+opts.strategy = new CustomStrategy(opts);
+const pool = new Pool(opts);
+```
+
+> See [Implementing a custom strategy](#implementing-custom-strategies) for more details on how to implement a custom strategy compatible with the promise pool.
+
+### Scheduling promises
+
+The core of this module is of course to allow scheduling of promises within the pool. To do so, two methods exists that provides two different interfaces associated with how you'd like to handle the result of your promises.
+
+#### The `.schedule()` api
+
+The `.schedule()` API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
+
+```js
+const pool = new Pool(5);
+
+// Spreading 1000 promises execution across the pool.
+for (let i = 0; i < 1000; ++i) {
+  pool.schedule(() => new Promise((rv, rj) => {
+    console.log(`Promise ${i} running`);
+  }).then(() => {
+    console.log('Promise successfully executed');
+  }));
+}
+```
