@@ -161,7 +161,7 @@ for (let i = 0; i < 100; ++i) {
 // Waiting for all scheduled promises to be executed,
 // and prints the result to the standard output.
 pool.all().then(console.log);
-``
+```
 
 Note that the `.all` method will by default forward to the end callback an array of results of all the promises exe
 
