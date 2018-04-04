@@ -149,6 +149,22 @@ Promise.all([
 });
 ```
 
+#### The `.all` API
+
+Once you have scheduled a set of promise executions, you may want to wait for the completion of all the promises scheduled in the pool. To do so, you can use the `.all` API which has the same semantics as `Promise.all`.
+
+```js
+for (let i = 0; i < 100; ++i) {
+  pool.schedule(promise(i));
+}
+
+// Waiting for all scheduled promises to be executed,
+// and prints the result to the standard output.
+pool.all().then(console.log);
+``
+
+Note that the `.all` method will by default forward to the end callback an array of results of all the promises exe
+
 
 ### Patching the `Promise` object
 
