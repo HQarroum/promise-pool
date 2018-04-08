@@ -51,21 +51,8 @@ const Pool = require('promise-pool');
 The promise pool can be instanciated using the constructor function returned by `require`.
 
 ```js
-const Pool = require('promise-pool');
 const pool = new Pool(5);
 ```
-
-It can also patch the existing `Promise` function for further use within your application.
-
-```js
-const Pool = require('promise-pool');
-
-// Patch the global `Promise` object.
-Pool.patch();
-const pool = new Promise.Pool(5);
-```
-
-> Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if patching failed.
 
 ### Introducing strategies
 
@@ -122,21 +109,72 @@ const pool = new Pool(opts);
 
 ### Scheduling promises
 
-The core of this module is of course to allow scheduling of promises within the pool. To do so, two methods exists that provides two different interfaces associated with how you'd like to handle the result of your promises.
+The core of this module is of course to allow scheduling of promises within the pool. To do so, different methods exists that provides different interfaces associated with different use-cases. The next sections will expose minimal working code for each example. For the sake of simplicity, the boilerplate code will be omitted, in order to get the full examples, have a look at the [examples](https://github.com/HQarroum/promise-pool/edit/master/examples) directory.
 
-#### The `.schedule()` api
+#### The `.schedule()` API
 
-The `.schedule()` API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
+This API makes it possible to execute functions returning promise objects using a fluent interface, and in a fire-and-forget manner. Use this API if you'd like to handle the result of the execution of a promise yourself.
 
 ```js
-const pool = new Pool(5);
-
-// Spreading 1000 promises execution across the pool.
-for (let i = 0; i < 1000; ++i) {
-  pool.schedule(() => new Promise((rv, rj) => {
-    console.log(`Promise ${i} running`);
-  }).then(() => {
-    console.log('Promise successfully executed');
-  }));
+// Spreads 100 promise executions across the pool.
+for (let i = 0; i < 100; ++i) {
+  pool.schedule(promise(i));
 }
 ```
+
+#### The `.enqueue` API
+
+This API works like `.schedule()` in that it will enqueue a promise execution in the available pool of promises, but unlike `.schedule()` it will return a promise which is resolved (or rejected) once the initial promise has been executed.
+
+```js
+// Sequentially enqueuing promises using standard `.then()`.
+pool.enqueue(promise(1))
+  .then((result) => pool.enqueue(promise(2)))
+  .then((result) => {
+    console.log(`Execution done with ${result}`);
+  });
+```
+
+#### The `.enqueueOnSameExecutor` API
+
+Sometimes, it is useful to enqueue an array of promises on the same executor, such that it is guaranteed that these promises will be executed sequentially (e.g you would like to run in parallel a sequence of promises which, individually, will each run sequentially within the sequence). To do so, you can use the `.enqueueOnSameExecutor()` API as follow.
+
+```js
+// Sequentially enqueuing promises using standard `.then()`.
+Promise.all([
+  pool.enqueueOnSameExecutor([promise(1), promise(2), promise(3)]),
+  pool.enqueueOnSameExecutor([promise(4), promise(5), promise(6)])
+]).then((result) => {
+  console.log(`Execution done with ${result}`);
+});
+```
+
+#### The `.all` API
+
+Once you have scheduled a set of promise executions, you may want to wait for the completion of all the promises scheduled in the pool. To do so, you can use the `.all` API which has the same semantics as `Promise.all`.
+
+```js
+for (let i = 0; i < 100; ++i) {
+  pool.schedule(promise(i));
+}
+
+// Waiting for all scheduled promises to be executed,
+// and prints the result to the standard output.
+pool.all().then(console.log);
+```
+
+Note that the `.all` method will by default forward to the end callback an array of results of all the promises exe
+
+
+### Patching the `Promise` object
+
+For commodity, it is possible to patch the existing `Promise` function with the `Pool` object for further use within your application.
+
+```js
+// Patch the global `Promise` object.
+Pool.patch();
+const pool = new Promise.Pool(5);
+```
+
+> Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if the patching operation failed.
+
