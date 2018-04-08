@@ -25,13 +25,14 @@ const load = new Pool({
  */
 const onProcessDone = (idx) => {
   console.log(`Promise ${idx} successfully executed !`);
+  return (Promise.resolve(idx));
 };
 
 /**
  * Process execution of a promise.
  * @param idx the current promise index.
  */
-const process = (idx) => () => new Promise((resolve) => {
+const promise = (idx) => () => new Promise((resolve) => {
   setTimeout(() => {
     console.log(`Promise ${idx} running ...`);
     resolve(idx);
@@ -41,19 +42,19 @@ const process = (idx) => () => new Promise((resolve) => {
 /**
  * Called back before the execution of a promise.
  * @param {*} idx the index of the promise in the pool.
- * @param {*} pool a reference to the pool executing the promise.
+ * @param {*} strategy a reference to the strategy executing the promise.
  */
-const onBeforeEach = (idx, pool) => {
-  console.log(`[+] Before execution of promise ${idx} running on the ${pool == random ? 'random' : 'load balanced'} pool`);
+const onBeforeEach = (idx, strategy) => {
+  console.log(`[+] Before execution of promise ${idx} running on the ${strategy == random.strategy ? 'random' : 'load balanced'} strategy`);
 };
 
 /**
  * Called back after the execution of a promise.
  * @param {*} idx the index of the promise in the pool.
- * @param {*} pool a reference to the pool executing the promise.
+ * @param {*} strategy a reference to the strategy executing the promise.
  */
-const onAfterEach = (idx, pool) => {
-  console.log(`[+] After execution of promise ${idx} running on the ${pool == random ? 'random' : 'load balanced'} pool`);
+const onAfterEach = (idx, strategy) => {
+  console.log(`[+] After execution of promise ${idx} running on the ${strategy == random.strategy ? 'random' : 'load balanced'} strategy`);
 };
 
 // Subscribing to lifecycle events on the random pool.
@@ -65,8 +66,12 @@ load.beforeEach(onBeforeEach).afterEach(onAfterEach);
 // Linearly spreading 100 promises execution across both pools.
 for (let i = 0; i < 100; ++i) {
   if (i % 2 == 0) {
-    random.schedule(process(i));
+    random.schedule(promise(i));
   } else {
-    load.schedule(process(i));
+    load.schedule(promise(i));
   }
 }
+
+// Waiting for both pools to finish execution of
+// the scheduled promises.
+Promise.all([ random.all(), load.all() ]).then(console.log);

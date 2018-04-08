@@ -20,6 +20,7 @@ const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
  */
 const onProcessDone = (idx) => {
   console.log(`Promise ${idx} successfully executed !`);
+  return (Promise.resolve(idx));
 };
 
 /**
@@ -46,3 +47,7 @@ pool.beforeEach((idx) => {
 for (let i = 0; i < 100; ++i) {
   pool.schedule(process(i));
 }
+
+// Waiting for all the promises to be executed and
+// displaying the results of the promise executions.
+pool.all().then((results) => console.log(JSON.stringify(results)));
