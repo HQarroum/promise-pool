@@ -128,11 +128,8 @@ This API works like `.schedule()` in that it will enqueue a promise execution in
 
 ```js
 // Sequentially enqueuing promises using standard `.then()`.
-pool.enqueue(promise(1))
-  .then((result) => pool.enqueue(promise(2)))
-  .then(console.log);
+pool.enqueue(promise(1)).then(() => pool.enqueue(promise(2))).then(console.log);
 ```
-
 
 #### The `.enqueueMany` API
 
@@ -174,6 +171,21 @@ pool.all().then(console.log);
 
 Note that the `.all` method will by default forward to the end callback an array of results yield by all the promises in execution at the time `.all` has been called, in the same order as they were enqueued in the pool.
 
+### Lifecycle events
+
+The promise pool implements the ability for user of the pool to register to two lifecycle events using two interfaces :
+
+  - `.beforeEach` allows to register callback functions called before the execution of each scheduled promises.
+  - `.afterEach` allows to register callback functions called after the execution of each scheduled promises.
+
+```js
+// Subscribing to lifecycle events on the pool.
+pool.beforeEach((idx) => {
+  console.log(`[+] Before execution of promise ${idx}`);
+}).afterEach((idx) => {
+  console.log(`[+] After execution of promise ${idx}`);
+});
+```
 
 ### Patching the `Promise` object
 
