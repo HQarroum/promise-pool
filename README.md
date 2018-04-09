@@ -4,7 +4,7 @@
 	<br>
 	<br>
 	<br>
-	<img width="1200" src="https://github.com/HQarroum/promise-pool/raw/master/assets/logo.png" alt="styleshift">
+	<img width="1200" src="https://github.com/HQarroum/promise-pool/raw/master/assets/logo.png" alt="logo">
 	<br>
 	<br>
 	<br>
@@ -57,6 +57,16 @@ const pool = new Pool(5);
 ### Introducing strategies
 
 In order to allow users of this library to choose how to balance the execution of promises within the pool, the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has been used to inject external behaviors at runtime. There are 3 built-in strategies already implemented, but you can also provide your own implementation in the context of advanced use-cases.
+
+<h1 align="center">
+        <br>
+        <br>
+        <br>
+        <img src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
+        <br>
+        <br>
+        <br>
+</h1>
 
 #### Round-robin strategy
 

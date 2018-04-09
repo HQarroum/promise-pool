@@ -45,6 +45,23 @@ describe('The promise pool dispatching system', function () {
   });
 
   /**
+   * Checking whether the promise pool is able to schedule
+   * delayed promises.
+   */
+  it('should be able to schedule delayed promises', function (callback) {
+    // Spreading 5 promises execution across the pool.
+    for (let i = 0; i < 5; ++i) {
+      this.pool.schedule(promise(i), 1000);
+    }
+    // Waiting for all the promises to be executed and
+    // displaying the results of the promise executions.
+    this.pool.all()
+      .then((results) => evaluateAsPromise(() => results.length.should.equal(100)))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
    * Checking whether the promise pool is able to enqueue
    * promises.
    */
