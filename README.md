@@ -61,9 +61,7 @@ In order to allow users of this library to choose how to balance the execution o
 <h1 align="center">
         <br>
         <br>
-        <br>
-        <img src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
-        <br>
+        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
         <br>
         <br>
 </h1>
