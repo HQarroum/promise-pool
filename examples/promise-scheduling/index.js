@@ -27,7 +27,7 @@ const onProcessDone = (idx) => {
  * Process execution of a promise.
  * @param idx the current promise index.
  */
-const process = (idx) => () => new Promise((resolve) => {
+const promise = (idx) => () => new Promise((resolve) => {
   setTimeout(() => {
     console.log(`Promise ${idx} running ...`);
     resolve(idx);
@@ -45,7 +45,7 @@ pool.beforeEach((idx) => {
 
 // Spreading 100 promises execution across the pool.
 for (let i = 0; i < 100; ++i) {
-  pool.schedule(process(i));
+  pool.schedule(promise(i));
 }
 
 // Waiting for all the promises to be executed and
