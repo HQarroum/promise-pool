@@ -122,7 +122,7 @@ for (let i = 0; i < 100; ++i) {
 }
 ```
 
-#### The `.enqueue` API
+#### The `.enqueue()` API
 
 This API works like `.schedule()` in that it will enqueue a promise execution in the available pool of promises, but unlike `.schedule()` it will return a promise which is resolved (or rejected) once the initial promise has been executed.
 
@@ -131,7 +131,7 @@ This API works like `.schedule()` in that it will enqueue a promise execution in
 pool.enqueue(promise(1)).then(() => pool.enqueue(promise(2))).then(console.log);
 ```
 
-#### The `.enqueueMany` API
+#### The `.enqueueMany()` API
 
 This API works like `.enqueue()` but will allow you to provide an array of functions at once, while being able to catch th results yield by each of them.
 
@@ -143,7 +143,7 @@ pool.enqueueMany([ promise(1), promise(2), promise(3) ]).then(console.log);
 
 > Note that passing an array of function to `.enqueue` has the same effect than calling `.enqueueMany`.
 
-#### The `.enqueueOnSameExecutor` API
+#### The `.enqueueOnSameExecutor()` API
 
 Sometimes, it is useful to enqueue an array of promises on the same executor, such that it is guaranteed that these promises will be executed sequentially (e.g you would like to run in parallel a sequence of promises which, individually, will each run sequentially within the sequence). To do so, you can use the `.enqueueOnSameExecutor()` API as follow.
 
@@ -155,7 +155,7 @@ Promise.all([
 ]).then(console.log);
 ```
 
-#### The `.all` API
+#### The `.all()` API
 
 Once you have scheduled a set of promise executions, you may want to wait for the completion of all the promises scheduled in the pool. To do so, you can use the `.all` API which has the same semantics as `Promise.all`.
 
@@ -170,6 +170,12 @@ pool.all().then(console.log);
 ```
 
 Note that the `.all` method will by default forward to the end callback an array of results yield by all the promises in execution at the time `.all` has been called, in the same order as they were enqueued in the pool.
+
+### Delaying promise executions
+
+While scheduling or enqueuing promises for execution, it is possible to delay their execution within the pool. To do so, you can provide a delay in milliseconds as a second argument of `.schedule`, `.enqueue`, `.enqueueMany` and `enqueueOnSameExecutor`.
+
+
 
 ### Lifecycle events
 
