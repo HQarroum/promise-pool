@@ -38,6 +38,15 @@ This module provides a [promise](https://scotch.io/tutorials/javascript-promises
 
 Use-cases associated with this module can be multiple and range from operations such as rate limiting (e.g when it is necessary to throttle the amount of concurrent requests issued against a given service), to basic sequential promise execution, segmentation of execution of promises, etc.
 
+<p align="center">
+        <br>
+        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool" />
+        <br>
+	<sub>An example of distribution of promises across a pool of 4 executors.</sub>
+        <br>
+	<br>
+</p>
+
 ## Usage
 
 To include the `promise-pool` module into your application, you must first include it as follow.
@@ -57,17 +66,6 @@ const pool = new Pool(5);
 ### Introducing strategies
 
 In order to allow users of this library to choose how to balance the execution of promises within the pool, the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has been used to inject external behaviors at runtime. There are 3 built-in strategies already implemented, but you can also provide your own implementation in the context of advanced use-cases.
-
-Under the hood, the promise pool will take promises to schedule as an input, and will delegate the distribution of the execution of these promises across the pool to the underlying selected strategy.
-
-<p align="center">
-        <br>
-        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool" />
-        <br>
-	<sub>Distribution of promises across the pool.</sub>
-        <br>
-	<br>
-</p>
 
 #### Round-robin strategy
 
