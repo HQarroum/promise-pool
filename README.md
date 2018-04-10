@@ -58,12 +58,14 @@ const pool = new Pool(5);
 
 In order to allow users of this library to choose how to balance the execution of promises within the pool, the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has been used to inject external behaviors at runtime. There are 3 built-in strategies already implemented, but you can also provide your own implementation in the context of advanced use-cases.
 
+Under the hood, the promise pool will take promises to schedule as an input, and will delegate the distribution of the execution of these promises across the pool to the underlying selected strategy.
+
 <h1 align="center">
         <br>
+        <img width="630" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
         <br>
-        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
         <br>
-        <br>
+	<p align="center"><sub>Distribution of promises across the pool.</sub></p>
 </h1>
 
 #### Round-robin strategy
