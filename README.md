@@ -38,15 +38,6 @@ This module provides a [promise](https://scotch.io/tutorials/javascript-promises
 
 Use-cases associated with this module can be multiple and range from operations such as rate limiting (e.g when it is necessary to throttle the amount of concurrent requests issued against a given service), to basic sequential promise execution, segmentation of execution of promises, etc.
 
-<p align="center">
-        <br>
-        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool" />
-        <br>
-	<sub>An example of distribution of promises across a pool of 4 executors.</sub>
-        <br>
-	<br>
-</p>
-
 ## Usage
 
 To include the `promise-pool` module into your application, you must first include it as follow.
