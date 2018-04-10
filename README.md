@@ -60,13 +60,13 @@ In order to allow users of this library to choose how to balance the execution o
 
 Under the hood, the promise pool will take promises to schedule as an input, and will delegate the distribution of the execution of these promises across the pool to the underlying selected strategy.
 
-<h1 align="center">
+<p align="center">
         <br>
-        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
+        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool" />
         <br>
 	<sub>Distribution of promises across the pool.</sub>
         <br>
-</h1>
+</p>
 
 #### Round-robin strategy
 
