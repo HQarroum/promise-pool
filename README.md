@@ -62,10 +62,10 @@ Under the hood, the promise pool will take promises to schedule as an input, and
 
 <h1 align="center">
         <br>
-        <img width="630" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
+        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
         <br>
+	<sub>Distribution of promises across the pool.</sub>
         <br>
-	<p align="center"><sub>Distribution of promises across the pool.</sub></p>
 </h1>
 
 #### Round-robin strategy
