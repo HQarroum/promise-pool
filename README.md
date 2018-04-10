@@ -66,6 +66,7 @@ Under the hood, the promise pool will take promises to schedule as an input, and
         <br>
 	<sub>Distribution of promises across the pool.</sub>
         <br>
+	<br>
 </p>
 
 #### Round-robin strategy
