@@ -173,9 +173,26 @@ Note that the `.all` method will by default forward to the end callback an array
 
 ### Delaying promise executions
 
-While scheduling or enqueuing promises for execution, it is possible to delay their execution within the pool. To do so, you can provide a delay in milliseconds as a second argument of `.schedule`, `.enqueue`, `.enqueueMany` and `enqueueOnSameExecutor`.
+While scheduling or enqueuing promises for execution, it is possible to delay their execution within the pool. To do so, you can provide a delay in milliseconds as a second argument of `.schedule`, `.enqueue`, `.enqueueMany` and `enqueueOnSameExecutor` to specify how much time should last before executing the given function.
 
+Note that this delay will not specify the amount of time before *each* execution of promises, but rather the delay before executing the function. For instance, in a pool of 5 elements, given 5 promises scheduled with a delay of 1 second, the 5 promises will be executed in parallel after a period of 1 second.
 
+```js
+for (let i = 0; i < 5; ++i) {
+  pool.schedule(promise(i), 1000);
+}
+
+// After a period of 1 second, all the scheduled promises
+// will be executed and resolved.
+pool.all().then(console.log);
+```
+
+If you'd like to enforce a delay before each execution of promises, you need to enqueue them sequentially with `enqueueOnSameExecutor` such as in the below example.
+
+```js
+// Will resolve after 3 seconds (1 second for each promise execution).
+pool.enqueueOnSameExecutor([ promise(1), promise(2), promise(3) ], 1000).then(console.log);
+```
 
 ### Lifecycle events
 
