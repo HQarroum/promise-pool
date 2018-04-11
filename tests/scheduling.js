@@ -49,16 +49,19 @@ describe('The promise pool dispatching system', function () {
    * delayed promises.
    */
   it('should be able to schedule delayed promises', function (callback) {
+    let results = null;
+
     // Spreading 5 promises execution across the pool.
     for (let i = 0; i < 5; ++i) {
       this.pool.schedule(promise(i), 1000);
     }
-    // Waiting for all the promises to be executed and
-    // displaying the results of the promise executions.
-    this.pool.all()
-      .then((results) => evaluateAsPromise(() => results.length.should.equal(100)))
-      .then(callback)
-      .catch(callback);
+    this.pool.all().then((array) => results = array);
+    // The promises executions should last 1 second.
+    Promise.resolve().then(() =>
+      new Promise((resolve, reject) =>
+        setTimeout(() => resolve(evaluateAsPromise(() => (JSON.stringify(results) === JSON.stringify([0, 1, 2, 3, 4])).should.be.true())), 1000 + 100)
+      )
+    ).then(callback).catch(callback);
   });
 
   /**
