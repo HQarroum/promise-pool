@@ -13,7 +13,7 @@
     "promise",
     "pool"
   ],
-  "author": "Halim Qarroum",
+  "author": "Halim Qarroum <hqm.post@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "grunt": "^1.0.1",
