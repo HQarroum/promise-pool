@@ -70,10 +70,11 @@ describe('The promise pool dispatching system', function () {
    */
   it('should be able to enqueue promises', function (callback) {
     let p_ = Promise.resolve();
+    const enqueue_ = (i) => () => this.pool.enqueue(promise(i));
 
     // Spreading 100 promises execution across the pool.
     for (let i = 0; i < 100; ++i) {
-      p_ = p_.then(() => this.pool.enqueue(promise(i)));
+      p_ = p_.then(enqueue_(i));
     }
     // Waiting for all the promises to be executed.
     p_.then((result) => evaluateAsPromise(() => result.should.equal(99)))
