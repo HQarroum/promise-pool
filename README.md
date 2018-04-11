@@ -58,14 +58,6 @@ const pool = new Pool(5);
 
 In order to allow users of this library to choose how to balance the execution of promises within the pool, the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has been used to inject external behaviors at runtime. There are 3 built-in strategies already implemented, but you can also provide your own implementation in the context of advanced use-cases.
 
-<h1 align="center">
-        <br>
-        <br>
-        <img width="600" src="https://github.com/HQarroum/promise-pool/raw/master/assets/promise-pool.png" alt="promise-pool">
-        <br>
-        <br>
-</h1>
-
 #### Round-robin strategy
 
 This is the default strategy which is loaded by the pool when no strategies have been specified. Its behavior is simple, promises will be sequentially inserted in the pool starting from the first promise in the pool to the latest, while looping to the first one once every promises have been used.
@@ -181,9 +173,24 @@ Note that the `.all` method will by default forward to the end callback an array
 
 ### Delaying promise executions
 
-While scheduling or enqueuing promises for execution, it is possible to delay their execution within the pool. To do so, you can provide a delay in milliseconds as a second argument of `.schedule`, `.enqueue`, `.enqueueMany` and `enqueueOnSameExecutor`.
+While scheduling or enqueuing promises, it is possible to delay their execution in time. To do so, you can provide a delay in milliseconds as a second argument of `.schedule`, `.enqueue`, `.enqueueMany` and `enqueueOnSameExecutor` to specify how much time should last before executing the given promise.
 
+Note that this delay will **not** specify the amount of time *between each promise execution* since all promises do not execute sequentially, but rather the delay before executing them. For instance, in a pool of 5 executors and given 5 promises scheduled with a delay of 1 second, the 5 promises will all be executed in parallel after a period of 1 second since they are all going to be executed in parallel.
 
+```js
+for (let i = 0; i < 5; ++i) {
+  pool.schedule(promise(i), 1000);
+}
+// Resolves after 1 second.
+pool.all().then(console.log);
+```
+
+If you'd like to enforce a delay between each promise execution, you need to enqueue them sequentially with `enqueueOnSameExecutor`, such as in the below example.
+
+```js
+// Will resolve after 3 seconds (1 second for each promise execution).
+pool.enqueueOnSameExecutor([ promise(1), promise(2), promise(3) ], 1000).then(console.log);
+```
 
 ### Lifecycle events
 
