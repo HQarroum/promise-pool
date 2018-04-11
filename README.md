@@ -14,7 +14,7 @@
 
 > A Promise pool implementation supporting sequential execution of promises across a pool.
 
-[![Build Status](https://travis-ci.org/HQarroum/promise-pool.svg?branch=master)](https://travis-ci.org/HQarroum/promise-pool) [![Code Climate](https://codeclimate.com/repos/55e34093e30ba072de0013d2/badges/acc2df5cc7f78c301ad9/gpa.svg)](https://codeclimate.com/repos/55e34093e30ba072de0013d2/feed)
+[![Build Status](https://travis-ci.org/HQarroum/promise-pool.svg?branch=master)](https://travis-ci.org/HQarroum/promise-pool) [![codecov](https://codecov.io/gh/HQarroum/promise-pool/branch/master/graph/badge.svg)](https://codecov.io/gh/HQarroum/promise-pool)
 
 ## Table of contents
 
