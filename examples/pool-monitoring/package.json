@@ -1,0 +1,19 @@
+{
+  "name": "promise-monitoring",
+  "version": "1.0.0",
+  "description": "Example application displaying a live graph of the distribution of promises within a pool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "promise",
+    "pool",
+    "monitoring"
+  ],
+  "author": "Halim Qarroum",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.15.1"
+  }
+}
