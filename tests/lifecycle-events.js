@@ -106,4 +106,38 @@ describe('The promise pool events system', function () {
       .then(callback)
       .catch(callback);
   });
+
+  /**
+   * Checking whether the promise pool is able to unregister
+   * lifecycle event handlers.
+   */
+  it('should be able to unregister lifecycle event handlers', function (callback) {
+    let count = 0;
+
+    // Event handler counting calls.
+    const handler = () => count++;
+
+    // Registering lifecycle events.
+    this.pool
+      .beforeEach(handler)
+      .beforeEnqueueEach(handler)
+      .afterEach(handler)
+      .afterEnqueueEach(handler)
+      .removeBeforeEach(handler)
+      .removeBeforeEnqueueEach(handler)
+      .removeAfterEach(handler)
+      .removeAfterEnqueueEach(handler);
+
+    // Spreading 100 promises execution across the pool.
+    for (let i = 0; i < 10; ++i) {
+      this.pool.schedule(promise(i));
+    }
+
+    // Waiting for all the promises to be executed and
+    // displaying the results of the promise executions.
+    this.pool.all()
+      .then(() => evaluateAsPromise(() => count.should.be.equal(0)))
+      .then(callback)
+      .catch(callback);
+  });
 });
