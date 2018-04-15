@@ -5,13 +5,15 @@
 
 ## Install
 
+Go to the `examples/pool-monitoring` directory in your terminal, and install the command-line dependencies as follow.
+
 ```bash
 npm install
 ```
 
 ## Description
 
-This example features a command-line tool allowing you to control the execution of promises within a pool instance.
+This example features a command-line tool allowing you to control the execution of promises within a pool instance. This command-line tool will schedule a given number of promises on the pool over a random period of time (the number of promises spread across the executors will increase), and will await for the scheduled promises to complete (the number of promises spread across the executors will gradually decrease).
 
 ### Options
 
