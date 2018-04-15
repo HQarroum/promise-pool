@@ -29,7 +29,6 @@ const awaitAsync = (timeout) => new Promise((resolve) => setTimeout(resolve, tim
  */
 const promise = () => () => awaitAsync(random(200, 500));
 
-
 // Enforcing command-line parameters validity.
 ['number', 'poolSize', 'strategy'].forEach((key) => {
   if (!program[key]) {
@@ -58,7 +57,6 @@ const execute = () => {
 
 // Configuring `watch` to display the live chart on `stdout`.
 watch(pool, { total: program.number }).pipe(process.stdout);
-
 
 // Waiting for the execution of all promises in the pool.
 execute().then(() => pool.all()).then(() => console.log('[+] All promises have been executed !'));

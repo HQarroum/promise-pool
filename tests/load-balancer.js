@@ -17,9 +17,7 @@ const evaluateAsPromise = (f) => new Promise((resolve, reject) => {
  * Process execution of a promise.
  * @param idx the current promise index.
  */
-const promise = (idx) => () => new Promise((resolve) => {
-  setTimeout(() => resolve(idx), idx * 100);
-});
+const promise = (idx) => () => new Promise((resolve) => setTimeout(() => resolve(idx), idx * 100));
 
 describe('The load balancer strategy', function () {
 

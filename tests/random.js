@@ -17,9 +17,7 @@ const evaluateAsPromise = (f) => new Promise((resolve, reject) => {
  * Process execution of a promise.
  * @param idx the current promise index.
  */
-const promise = (idx) => () => new Promise((resolve) => {
-  setImmediate(() => resolve(idx));
-});
+const promise = (idx) => () => new Promise((resolve) => setImmediate(() => resolve(idx)));
 
 /**
  * @return the entropy of the given array.
