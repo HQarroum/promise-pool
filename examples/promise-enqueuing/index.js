@@ -26,7 +26,7 @@ const promise = (idx) => () => new Promise((resolve) => {
 
 // Enqueuing two promises sequentially.
 pool.enqueue(promise(1))
-  .then((result) => pool.enqueue(promise(2)))
+  .then(() => pool.enqueue(promise(2)))
   .then((result) => {
     console.log(`Execution done with ${result}`);
   });
