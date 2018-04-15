@@ -1,6 +1,5 @@
-const _      = require('lodash');
-const should = require('should');
-const Pool   = require('../');
+const should  = require('should');
+const Pool    = require('../');
 
 /**
  * @return a promise resolved if the given function does not
@@ -56,7 +55,7 @@ describe('The promise pool dispatching system', function () {
     this.pool.all().then((array) => results = array);
     // The promises executions should last 1 second.
     Promise.resolve().then(() =>
-      new Promise((resolve, reject) =>
+      new Promise((resolve) =>
         setTimeout(() => resolve(evaluateAsPromise(() => (JSON.stringify(results) === JSON.stringify([0, 1, 2, 3, 4])).should.be.true())), 1000 + 100)
       )
     ).then(callback).catch(callback);

@@ -1,4 +1,3 @@
-const _          = require('lodash');
 const should     = require('should');
 const Pool       = require('../');
 const RoundRobin = require('../lib/strategies/round-robin');
