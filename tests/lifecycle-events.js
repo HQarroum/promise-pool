@@ -37,7 +37,7 @@ describe('The promise pool events system', function () {
     // Registering lifecycle events.
     this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
 
-    // Spreading 100 promises execution across the pool.
+    // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }
@@ -62,7 +62,7 @@ describe('The promise pool events system', function () {
     // Registering lifecycle events.
     this.pool.beforeEnqueueEach((idx) => beforeEach.push(idx)).afterEnqueueEach((idx) => afterEach.push(idx));
 
-    // Spreading 100 promises execution across the pool.
+    // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }
@@ -93,7 +93,7 @@ describe('The promise pool events system', function () {
       }
     });
 
-    // Spreading 100 promises execution across the pool.
+    // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }
@@ -127,7 +127,7 @@ describe('The promise pool events system', function () {
       .removeAfterEach(handler)
       .removeAfterEnqueueEach(handler);
 
-    // Spreading 100 promises execution across the pool.
+    // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }

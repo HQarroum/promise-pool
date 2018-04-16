@@ -38,7 +38,7 @@ describe('The round robin strategy', function () {
 
     // Storing the order of insertion of promises.
     this.pool.beforeEach((idx) => array.push(idx));
-    // Spreading 100 promises execution across the pool.
+    // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }
@@ -46,6 +46,87 @@ describe('The round robin strategy', function () {
     this.pool.all()
       .then((results) => evaluateAsPromise(() => JSON.stringify(results).should.equal(results_)))
       .then(() => evaluateAsPromise(() => JSON.stringify(array).should.equal(expected)))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
+   * Checking whether the strategy is able to upsize the pool
+   * dynamically.
+   */
+  it('should be able to upsize the pool dynamically', function (callback) {
+    const beforeEach = [];
+    const afterEach  = [];
+    const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 1, 2, 3, 4];
+
+    // Registering lifecycle events.
+    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    // Resizing the pool.
+    this.pool.resize(15);
+    // Spreading `20` promises execution across the pool.
+    for (let i = 0; i < 20; ++i) {
+      this.pool.schedule(promise(i));
+    }
+    // Waiting for all the promises to be executed and
+    // displaying the results of the promise executions.
+    this.pool.all()
+      .then(() => evaluateAsPromise(() => (this.pool.opts.size === 15 && this.pool.strategy.pool.length === 15).should.be.true()))
+      .then(() => evaluateAsPromise(() => (JSON.stringify(beforeEach) === JSON.stringify(expected)).should.be.true()))
+      .then(() => evaluateAsPromise(() => (JSON.stringify(afterEach) === JSON.stringify(expected)).should.be.true()))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
+   * Checking whether the strategy is able to downsize the pool
+   * dynamically.
+   */
+  it('should be able to downsize the pool dynamically', function (callback) {
+    const beforeEach = [];
+    const afterEach  = [];
+    const expected = [0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1];
+
+    // Registering lifecycle events.
+    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    // Resizing the pool.
+    this.pool.resize(3);
+    // Spreading `20` promises execution across the pool.
+    for (let i = 0; i < 20; ++i) {
+      this.pool.schedule(promise(i));
+    }
+    // Waiting for all the promises to be executed and
+    // displaying the results of the promise executions.
+    this.pool.all()
+      .then(() => evaluateAsPromise(() => (this.pool.opts.size === 3 && this.pool.strategy.pool.length === 3).should.be.true()))
+      .then(() => evaluateAsPromise(() => (JSON.stringify(beforeEach) === JSON.stringify(expected)).should.be.true()))
+      .then(() => evaluateAsPromise(() => (JSON.stringify(afterEach) === JSON.stringify(expected)).should.be.true()))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
+   * Checking whether the strategy is able to resize the pool
+   * while scheduling new promises.
+   */
+  it('should be able to resize the pool while scheduling new promises', function (callback) {
+    const beforeEach = [];
+    const afterEach  = [];
+    const expected = [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0];
+
+    // Registering lifecycle events.
+    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    // Spreading `40` promises execution across the pool.
+    for (let i = 0; i < 40; ++i) {
+      this.pool.schedule(promise(i));
+      if (i === 5) this.pool.resize(10);
+      if (i === 15) this.pool.resize(3);
+    }
+    // Waiting for all the promises to be executed and
+    // displaying the results of the promise executions.
+    this.pool.all()
+      .then(() => evaluateAsPromise(() => (this.pool.opts.size === 3 && this.pool.strategy.pool.length === 3).should.be.true()))
+      .then(() => evaluateAsPromise(() => (JSON.stringify(beforeEach) === JSON.stringify(expected)).should.be.true()))
+      .then(() => evaluateAsPromise(() => (JSON.stringify(afterEach) === JSON.stringify(expected)).should.be.true()))
       .then(callback)
       .catch(callback);
   });
