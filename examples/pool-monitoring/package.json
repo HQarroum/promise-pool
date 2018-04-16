@@ -11,7 +11,7 @@
     "pool",
     "monitoring"
   ],
-  "author": "Halim Qarroum",
+  "author": "Halim Qarroum <hqm.post@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "commander": "^2.15.1"
