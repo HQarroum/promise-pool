@@ -66,7 +66,7 @@ describe('The random strategy', function () {
     const array    = [];
     
     // Storing the order of insertion of promises.
-    this.pool.beforeEach((idx) => array.push(idx));
+    this.pool.on('before.each', (e) => array.push(e.idx));
     // Spreading 100 promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
@@ -88,7 +88,7 @@ describe('The random strategy', function () {
     const afterEach  = [];
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Resizing the pool.
     this.pool.resize(60);
     // Spreading `100` promises execution across the pool.
@@ -121,7 +121,7 @@ describe('The random strategy', function () {
     const afterEach  = [];
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Resizing the pool.
     this.pool.resize(10);
     // Spreading `20` promises execution across the pool.
@@ -154,7 +154,7 @@ describe('The random strategy', function () {
     const afterEach  = [];
 
     // Registering lifecycle events.
-    this.pool.beforeEnqueueEach((idx) => beforeEach.push(idx)).afterEnqueueEach((idx) => afterEach.push(idx));
+    this.pool.on('before.enqueue.each', (e) => beforeEach.push(e.idx)).on('after.enqueue.each', (e) => afterEach.push(e.idx));
     // Spreading `1000` promises execution across the pool.
     for (let i = 0; i < 1000; ++i) {
       if (i >= 0 && i < 50) {

@@ -35,7 +35,7 @@ describe('The promise pool events system', function () {
     const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
 
     // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
@@ -60,7 +60,7 @@ describe('The promise pool events system', function () {
     const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     // Registering lifecycle events.
-    this.pool.beforeEnqueueEach((idx) => beforeEach.push(idx)).afterEnqueueEach((idx) => afterEach.push(idx));
+    this.pool.on('before.enqueue.each', (e) => beforeEach.push(e.idx)).on('after.enqueue.each', (e) => afterEach.push(e.idx));
 
     // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
@@ -83,12 +83,12 @@ describe('The promise pool events system', function () {
     let count = 0;
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx, strategy, result) => {
-      if (Number.isInteger(idx) && strategy instanceof RoundRobin && !result) {
+    this.pool.on('before.each', (e) => {
+      if (Number.isInteger(e.idx) && e.strategy instanceof RoundRobin && !e.result) {
         count++;
       }
-    }).afterEach((idx, strategy, result, insertedAt) => {
-      if (Number.isInteger(idx) && strategy instanceof RoundRobin && result === idx && Number.isInteger(insertedAt)) {
+    }).on('after.each', (e) => {
+      if (Number.isInteger(e.idx) && e.strategy instanceof RoundRobin && e.result === e.idx && Number.isInteger(e.insertedAt)) {
         count++;
       }
     });
@@ -118,14 +118,14 @@ describe('The promise pool events system', function () {
 
     // Registering lifecycle events.
     this.pool
-      .beforeEach(handler)
-      .beforeEnqueueEach(handler)
-      .afterEach(handler)
-      .afterEnqueueEach(handler)
-      .removeBeforeEach(handler)
-      .removeBeforeEnqueueEach(handler)
-      .removeAfterEach(handler)
-      .removeAfterEnqueueEach(handler);
+      .on('before.each', handler)
+      .on('before.enqueue.each', handler)
+      .on('after.each', handler)
+      .on('after.enqueue.each', handler)
+      .removeListener('before.each', handler)
+      .removeListener('before.enqueue.each', handler)
+      .removeListener('after.each', handler)
+      .removeListener('after.enqueue.each', handler);
 
     // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {

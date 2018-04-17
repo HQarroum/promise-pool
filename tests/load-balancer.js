@@ -39,7 +39,7 @@ describe('The load balancer strategy', function () {
     // Setting the timeout value to `20000` milliseconds.
     this.timeout(20000);
     // Storing the order of insertion of promises.
-    this.pool.beforeEach((idx) => array.push(idx));
+    this.pool.on('before.each', (e) => array.push(e.idx));
     // Spreading 100 promises execution across the pool.
     for (let i = 0; i < 20; ++i) {
       this.pool.schedule(promise(i));
@@ -64,7 +64,7 @@ describe('The load balancer strategy', function () {
     // Setting the timeout value to `20000` milliseconds.
     this.timeout(20000);
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Resizing the pool.
     this.pool.resize(15);
     // Spreading `20` promises execution across the pool.
@@ -93,7 +93,7 @@ describe('The load balancer strategy', function () {
     // Setting the timeout value to `20000` milliseconds.
     this.timeout(20000);
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Resizing the pool.
     this.pool.resize(5);
     // Spreading `20` promises execution across the pool.
@@ -120,7 +120,7 @@ describe('The load balancer strategy', function () {
     const expected   = [0,9,1,3,7,8,4,2,5,6,0,9,1,7,5,6,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5];
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Spreading `40` promises execution across the pool.
     for (let i = 0; i < 40; ++i) {
       this.pool.schedule(promise(i));

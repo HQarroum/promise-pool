@@ -41,27 +41,25 @@ const promise = (idx) => () => new Promise((resolve) => {
 
 /**
  * Called back before the execution of a promise.
- * @param {*} idx the index of the promise in the pool.
- * @param {*} strategy a reference to the strategy executing the promise.
+ * @param {*} e an object associated with the event.
  */
-const onBeforeEach = (idx, strategy) => {
-  console.log(`[+] Before execution of promise ${idx} running on the ${strategy == random.strategy ? 'random' : 'load balanced'} strategy`);
+const onBeforeEach = (e) => {
+  console.log(`[+] Before execution of promise ${e.idx} running on the ${e.strategy == random.strategy ? 'random' : 'load balanced'} strategy`);
 };
 
 /**
  * Called back after the execution of a promise.
- * @param {*} idx the index of the promise in the pool.
- * @param {*} strategy a reference to the strategy executing the promise.
+ * @param {*} e an object associated with the event.
  */
-const onAfterEach = (idx, strategy) => {
-  console.log(`[+] After execution of promise ${idx} running on the ${strategy == random.strategy ? 'random' : 'load balanced'} strategy`);
+const onAfterEach = (e) => {
+  console.log(`[+] After execution of promise ${e.idx} running on the ${e.strategy == random.strategy ? 'random' : 'load balanced'} strategy`);
 };
 
 // Subscribing to lifecycle events on the random pool.
-random.beforeEach(onBeforeEach).afterEach(onAfterEach);
+random.on('before.each', onBeforeEach).on('after.each', onAfterEach);
 
 // Subscribing to lifecycle events on the load balanced pool.
-load.beforeEach(onBeforeEach).afterEach(onAfterEach);
+load.on('before.each', onBeforeEach).on('after.each', onAfterEach);
 
 // Linearly spreading 100 promises execution across both pools.
 for (let i = 0; i < 100; ++i) {

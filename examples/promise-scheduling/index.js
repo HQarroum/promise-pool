@@ -37,10 +37,10 @@ const promise = (idx) => () => new Promise((resolve) => {
 /**
  * Subscribing to lifecycle events on the pool.
  */
-pool.beforeEach((idx) => {
-  console.log(`[+] Before execution of promise ${idx}`);
-}).afterEach((idx) => {
-  console.log(`[+] After execution of promise ${idx}`);
+pool.on('before.each', (e) => {
+  console.log(`[+] Before execution of promise ${e.idx}`);
+}).on('after.each', (e) => {
+  console.log(`[+] After execution of promise ${e.idx}`);
 });
 
 // Spreading 100 promises execution across the pool.

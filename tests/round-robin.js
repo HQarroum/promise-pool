@@ -37,7 +37,7 @@ describe('The round robin strategy', function () {
     const array    = [];
 
     // Storing the order of insertion of promises.
-    this.pool.beforeEach((idx) => array.push(idx));
+    this.pool.on('before.each', (e) => array.push(e.idx));
     // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
@@ -60,7 +60,7 @@ describe('The round robin strategy', function () {
     const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 1, 2, 3, 4];
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Resizing the pool.
     this.pool.resize(15);
     // Spreading `20` promises execution across the pool.
@@ -87,7 +87,7 @@ describe('The round robin strategy', function () {
     const expected = [0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1];
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Resizing the pool.
     this.pool.resize(3);
     // Spreading `20` promises execution across the pool.
@@ -114,7 +114,7 @@ describe('The round robin strategy', function () {
     const expected = [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0];
 
     // Registering lifecycle events.
-    this.pool.beforeEach((idx) => beforeEach.push(idx)).afterEach((idx) => afterEach.push(idx));
+    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
     // Spreading `40` promises execution across the pool.
     for (let i = 0; i < 40; ++i) {
       this.pool.schedule(promise(i));
