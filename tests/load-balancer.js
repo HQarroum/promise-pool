@@ -178,4 +178,12 @@ describe('The load balancer strategy', function () {
       .then(callback)
       .catch(callback);
   });
+
+  /**
+   * Checking whether the strategy is able to return an array
+   * representation of the internal promise pool.
+   */
+  it('should be able able to return an array representation of the internal promise pool', function () {
+    (Array.isArray(this.pool.promises())).should.be.true();
+  });
 });
