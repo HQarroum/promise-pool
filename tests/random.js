@@ -94,6 +94,21 @@ describe('The random strategy', function () {
   });
 
   /**
+   * Checking whether the current strategy is able to enqueue
+   * many promises on the same executor.
+   */
+  it('should be able to enqueue many promises on the same executor', function (callback) {
+    const expected = JSON.stringify([[1, 2, 3], [4, 5, 6]]);
+    // Sequentially enqueuing promises using standard `.then()`.
+    Promise.all([
+      this.pool.enqueueOnSameExecutor([ promise(1), promise(2), promise(3) ]),
+      this.pool.enqueueOnSameExecutor([ promise(4), promise(5), promise(6) ])
+    ]).then((results) => evaluateAsPromise(() => JSON.stringify(results).should.equal(expected)))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
    * Checking whether the strategy is able to upsize the pool
    * dynamically.
    */

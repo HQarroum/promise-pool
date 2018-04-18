@@ -67,6 +67,21 @@ describe('The load balancer strategy', function () {
   });
 
   /**
+   * Checking whether the current strategy is able to enqueue
+   * many promises on the same executor.
+   */
+  it('should be able to enqueue many promises on the same executor', function (callback) {
+    const expected = JSON.stringify([[1, 2, 3], [4, 5, 6]]);
+    // Sequentially enqueuing promises using standard `.then()`.
+    Promise.all([
+      this.pool.enqueueOnSameExecutor([ promise(1), promise(2), promise(3) ]),
+      this.pool.enqueueOnSameExecutor([ promise(4), promise(5), promise(6) ])
+    ]).then((results) => evaluateAsPromise(() => JSON.stringify(results).should.equal(expected)))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
    * Checking whether the strategy is able to upsize the pool
    * dynamically.
    */
@@ -153,7 +168,7 @@ describe('The load balancer strategy', function () {
       if (i === 5) this.pool.resize(10);
       if (i === 15) this.pool.resize(3);
     }
-    
+
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()
