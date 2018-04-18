@@ -28,7 +28,7 @@ describe('The load balancer strategy', function () {
   });
 
   /**
-   * Checking whether the promise pool is able to schedule
+   * Checking whether the current strategy is able to schedule
    * promises.
    */
   it('should be able to randomly schedule promises', function (callback) {
@@ -38,8 +38,10 @@ describe('The load balancer strategy', function () {
     
     // Setting the timeout value to `20000` milliseconds.
     this.timeout(20000);
+
     // Storing the order of insertion of promises.
     this.pool.on('before.each', (e) => array.push(e.idx));
+
     // Spreading 100 promises execution across the pool.
     for (let i = 0; i < 20; ++i) {
       this.pool.schedule(promise(i));
@@ -48,6 +50,18 @@ describe('The load balancer strategy', function () {
     this.pool.all()
       .then((results) => evaluateAsPromise(() => JSON.stringify(results).should.equal(results_)))
       .then(() => evaluateAsPromise(() => JSON.stringify(array).should.equal(expected)))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
+   * Checking whether the current strategyis able to enqueue
+   * many promises at the same time.
+   */
+  it('should be able to enqueue many promises at the same time', function (callback) {
+    const expected = JSON.stringify([1, 2, 3]);
+    this.pool.enqueueMany([ promise(1), promise(2), promise(3) ])
+      .then((results) => evaluateAsPromise(() => JSON.stringify(results).should.equal(expected)))
       .then(callback)
       .catch(callback);
   });
@@ -63,14 +77,19 @@ describe('The load balancer strategy', function () {
 
     // Setting the timeout value to `20000` milliseconds.
     this.timeout(20000);
+
     // Registering lifecycle events.
-    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.each', (e) =>
+      beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    
     // Resizing the pool.
     this.pool.resize(15);
+
     // Spreading `20` promises execution across the pool.
     for (let i = 0; i < 20; ++i) {
       this.pool.schedule(promise(i));
     }
+
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()
@@ -92,14 +111,19 @@ describe('The load balancer strategy', function () {
 
     // Setting the timeout value to `20000` milliseconds.
     this.timeout(20000);
+
     // Registering lifecycle events.
-    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.each', (e) =>
+      beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+
     // Resizing the pool.
     this.pool.resize(5);
+
     // Spreading `20` promises execution across the pool.
     for (let i = 0; i < 20; ++i) {
       this.pool.schedule(promise(i));
     }
+
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()
@@ -120,13 +144,16 @@ describe('The load balancer strategy', function () {
     const expected   = [0,9,1,3,7,8,4,2,5,6,0,9,1,7,5,6,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5,0,7,5];
 
     // Registering lifecycle events.
-    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.each', (e) =>
+      beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    
     // Spreading `40` promises execution across the pool.
     for (let i = 0; i < 40; ++i) {
       this.pool.schedule(promise(i));
       if (i === 5) this.pool.resize(10);
       if (i === 15) this.pool.resize(3);
     }
+    
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()

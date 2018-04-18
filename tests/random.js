@@ -57,7 +57,7 @@ describe('The random strategy', function () {
   });
 
   /**
-   * Checking whether the promise pool is able to schedule
+   * Checking whether the current strategy is able to schedule
    * promises.
    */
   it('should be able to randomly schedule promises', function (callback) {
@@ -67,14 +67,28 @@ describe('The random strategy', function () {
     
     // Storing the order of insertion of promises.
     this.pool.on('before.each', (e) => array.push(e.idx));
+
     // Spreading 100 promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }
+
     // Waiting for all promises to be executed.
     this.pool.all()
       .then((results) => evaluateAsPromise(() => JSON.stringify(results).should.equal(results_)))
       .then(() => evaluateAsPromise(() => should(entropy(input) < entropy(array)).be.true()))
+      .then(callback)
+      .catch(callback);
+  });
+
+  /**
+   * Checking whether the current strategyis able to enqueue
+   * many promises at the same time.
+   */
+  it('should be able to enqueue many promises at the same time', function (callback) {
+    const expected = JSON.stringify([1, 2, 3]);
+    this.pool.enqueueMany([ promise(1), promise(2), promise(3) ])
+      .then((results) => evaluateAsPromise(() => JSON.stringify(results).should.equal(expected)))
       .then(callback)
       .catch(callback);
   });
@@ -88,13 +102,17 @@ describe('The random strategy', function () {
     const afterEach  = [];
 
     // Registering lifecycle events.
-    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.each', (e) =>
+      beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    
     // Resizing the pool.
     this.pool.resize(60);
+
     // Spreading `100` promises execution across the pool.
     for (let i = 0; i < 100; ++i) {
       this.pool.schedule(promise(i));
     }
+
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()
@@ -121,13 +139,17 @@ describe('The random strategy', function () {
     const afterEach  = [];
 
     // Registering lifecycle events.
-    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.each', (e) =>
+      beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    
     // Resizing the pool.
     this.pool.resize(10);
+
     // Spreading `20` promises execution across the pool.
     for (let i = 0; i < 20; ++i) {
       this.pool.schedule(promise(i));
     }
+    
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()
@@ -154,7 +176,9 @@ describe('The random strategy', function () {
     const afterEach  = [];
 
     // Registering lifecycle events.
-    this.pool.on('before.enqueue.each', (e) => beforeEach.push(e.idx)).on('after.enqueue.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.enqueue.each', (e) =>
+      beforeEach.push(e.idx)).on('after.enqueue.each', (e) => afterEach.push(e.idx));
+    
     // Spreading `1000` promises execution across the pool.
     for (let i = 0; i < 1000; ++i) {
       if (i >= 0 && i < 50) {

@@ -29,7 +29,7 @@ describe('The promise pool dispatching system', function () {
    * promises.
    */
   it('should be able to schedule promises', function (callback) {
-    // Spreading 100 promises execution across the pool.
+    // Spreading `100` promises execution across the pool.
     for (let i = 0; i < 100; ++i) {
       this.pool.schedule(promise(i));
     }
@@ -48,15 +48,19 @@ describe('The promise pool dispatching system', function () {
   it('should be able to schedule delayed promises', function (callback) {
     let results = null;
 
-    // Spreading 5 promises execution across the pool.
+    // Spreading `5` promises execution across the pool.
     for (let i = 0; i < 5; ++i) {
       this.pool.schedule(promise(i), 1000);
     }
+
+    // Waiting for the promises to complete.
     this.pool.all().then((array) => results = array);
+
     // The promises executions should last 1 second.
     Promise.resolve().then(() =>
       new Promise((resolve) =>
-        setTimeout(() => resolve(evaluateAsPromise(() => (JSON.stringify(results) === JSON.stringify([0, 1, 2, 3, 4])).should.be.true())), 1000 + 100)
+        setTimeout(() => resolve(evaluateAsPromise(() =>
+          (JSON.stringify(results) === JSON.stringify([0, 1, 2, 3, 4])).should.be.true())), 1000 + 100)
       )
     ).then(callback).catch(callback);
   });
@@ -69,10 +73,11 @@ describe('The promise pool dispatching system', function () {
     let p_ = Promise.resolve();
     const enqueue_ = (i) => () => this.pool.enqueue(promise(i));
 
-    // Spreading 100 promises execution across the pool.
+    // Spreading `100` promises execution across the pool.
     for (let i = 0; i < 100; ++i) {
       p_ = p_.then(enqueue_(i));
     }
+    
     // Waiting for all the promises to be executed.
     p_.then((result) => evaluateAsPromise(() => result.should.equal(99)))
       .then(callback)

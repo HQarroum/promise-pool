@@ -57,6 +57,7 @@ const execute = () => {
     p_.push(awaitAsync(random(5000, 1000)).then(() => pool.schedule(promise())));
     // Randomly resizing the pool.
     setTimeout(() => pool.resize(program.poolSize + program.variation), 2000);
+    setTimeout(() => pool.resize(program.poolSize + program.variation + 10), 3000);
   }
   return (Promise.all(p_));
 };

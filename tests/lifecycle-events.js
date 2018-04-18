@@ -35,12 +35,14 @@ describe('The promise pool events system', function () {
     const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     // Registering lifecycle events.
-    this.pool.on('before.each', (e) => beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.each', (e) =>
+      beforeEach.push(e.idx)).on('after.each', (e) => afterEach.push(e.idx));
 
     // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }
+
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()
@@ -60,12 +62,14 @@ describe('The promise pool events system', function () {
     const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     // Registering lifecycle events.
-    this.pool.on('before.enqueue.each', (e) => beforeEach.push(e.idx)).on('after.enqueue.each', (e) => afterEach.push(e.idx));
+    this.pool.on('before.enqueue.each', (e) =>
+      beforeEach.push(e.idx)).on('after.enqueue.each', (e) => afterEach.push(e.idx));
 
     // Spreading `10` promises execution across the pool.
     for (let i = 0; i < 10; ++i) {
       this.pool.schedule(promise(i));
     }
+
     // Waiting for all the promises to be executed and
     // displaying the results of the promise executions.
     this.pool.all()
