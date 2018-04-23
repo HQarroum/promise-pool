@@ -29,7 +29,7 @@
 **Using NPM**
 
 ```bash
-npm install --save promise-pool
+npm install --save promise-pool-js
 ```
 
 ## Description
