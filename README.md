@@ -249,3 +249,13 @@ const pool = new Promise.Pool(5);
 
 > Note that the `patch` method will not modify the `Promise` object if an existing `Pool` object already exists. THe `patch` method returns a reference to the patched `Pool` object, or an undefined value if the patching operation failed.
 
+## Examples
+
+Different examples demonstrating the usage of the promise pool in different contexts are available in the [examples](examples) directory.
+
+Two graphical examples providing a way to monitor the pool in the form of a live graph are available under [pool-monitoring](examples/pool-monitoring) and [pool-resize](examples/pool-resize).
+
+## See Also
+
+ - [Pool watch](https://github.com/HQarroum/pool-watch), a live chart renderer of the distribution of promises across a promise pool.
+ - The [pool-monitoring](examples/pool-monitoring) example.
