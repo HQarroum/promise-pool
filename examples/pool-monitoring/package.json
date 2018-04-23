@@ -14,6 +14,7 @@
   "author": "Halim Qarroum <hqm.post@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.15.1"
+    "commander": "^2.15.1",
+    "pool-watch": "^1.0.0"
   }
 }

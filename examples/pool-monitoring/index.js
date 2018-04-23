@@ -1,6 +1,6 @@
 const program  = require('commander');
+const watch    = require('pool-watch');
 const Pool     = require('../../index');
-const watch    = require('../../../pool-watch/');
 
 program
   .version('1.0.0')

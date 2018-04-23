@@ -171,6 +171,24 @@ pool.all().then(console.log);
 
 Note that the `.all` method will by default forward to the end callback an array of results yield by all the promises in execution at the time `.all` has been called, in the same order as they were enqueued in the pool.
 
+#### The `.resize()` API
+
+It is possible to dynamically resize the promise pool in order to tune its performance at runtime. Take for instance the case in which you notice that the scheduled actions becomes too heavy for your promise pool, enlarging your pool to increase its number of executors on demand can provide better behaviors in the face of burst or high nunber of scheduled operations.
+
+```js
+/**
+ * Example algorithm in which we resize the pool
+ * if the actions to schedule are superior to twice
+ * the current size of the pool.
+ */
+while (actionsToSchedule.length > 0) {
+  pool.schedule(actionsToSchedule.pop());
+  if (actionsToSchedule.length > pool.size() * 2) {
+    pool.resize(pool.size() * 2);
+  }
+}
+```
+
 ### Delaying promise executions
 
 While scheduling or enqueuing promises, it is possible to delay their execution in time. To do so, you can provide a delay in milliseconds as a second argument of `.schedule`, `.enqueue`, `.enqueueMany` and `enqueueOnSameExecutor` to specify how much time should last before executing the given promise.
@@ -194,19 +212,30 @@ pool.enqueueOnSameExecutor([ promise(1), promise(2), promise(3) ], 1000).then(co
 
 ### Lifecycle events
 
-The promise pool implements the ability for user of the pool to register to two lifecycle events using two interfaces :
+The promise pool implements the `event-emitter` interface allowing clients of this library to register handlers to the following lifecycle events:
 
-  - `.beforeEach` allows to register callback functions called before the execution of each scheduled promises.
-  - `.afterEach` allows to register callback functions called after the execution of each scheduled promises.
+  - `before.each` is emitted before the execution of each scheduled promise.
+  - `after.each` is emitted after the execution of each scheduled promise.
+  - `before.enqueue.each` is emitted before each scheduled promise is enqueued in the pool.
+  - `after.enqueue.each` is emitted after each scheduled promise is enqueued in the pool.
+  - `pool.resized` is emitted after a resize operation on the promise pool.
 
 ```js
-// Subscribing to lifecycle events on the pool.
-pool.beforeEach((idx) => {
-  console.log(`[+] Before execution of promise ${idx}`);
-}).afterEach((idx) => {
-  console.log(`[+] After execution of promise ${idx}`);
+/**
+ * Registering lifecycle events on the pool.
+ */
+pool.on('before.enqueue.each', (e) => {
+  console.log(`Enqueued promise on executor ${e.idx}`);
+}).on('before.each', (e) => {
+  console.log(`About to execute promise with executor (${e.idx})`);
+}).on('after.each', (e) => {
+  console.log(`Executed promise with executor (${e.idx}) and result ${JSON.stringify(e.result)}`);
+}).on('pool.resized', (e) => {
+  console.log(`Resized pool to size ${e.size}`);
 });
 ```
+
+> For a more complete example on lifecycle events, see the [`lifecycle-events` example](examples/lifecycle-events).
 
 ### Patching the `Promise` object
 
@@ -214,7 +243,7 @@ For commodity, it is possible to patch the existing `Promise` function with the 
 
 ```js
 // Patch the global `Promise` object.
-Pool.patch();
+Pool.patch(Promise);
 const pool = new Promise.Pool(5);
 ```
 

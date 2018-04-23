@@ -54,4 +54,15 @@ describe('The promise pool', function () {
     (Pool.patch(Promise) === undefined).should.be.true();
     (Promise.Pool === Pool).should.be.true();
   });
+
+  /**
+   * Checking whether the `Pool` object can return its current size.
+   */
+  it('should be able to return its current size', function () {
+    const pool = new Pool(5);
+    
+    pool.size().should.be.equal(5);
+    pool.resize(10);
+    pool.size().should.be.equal(10);
+  });
 });

@@ -24,5 +24,21 @@ const promise = (idx) => () => new Promise((resolve) => {
   }, random(0, 1 * 1000));
 });
 
-// Enqueuing three promises sequentially.
+/**
+ * Registering lifecycle events on the pool.
+ */
+pool.on('before.enqueue.each', (e) => {
+  console.log(`Enqueued promise on executor ${e.idx}`);
+}).on('before.each', (e) => {
+  console.log(`About to execute promise with executor (${e.idx})`);
+}).on('after.each', (e) => {
+  console.log(`Executed promise with executor (${e.idx}) and result ${JSON.stringify(e.result)}`);
+}).on('pool.resized', (e) => {
+  console.log(`Resized pool to size ${e.size}`);
+});
+
+// Resizing the pool to `10` executors.
+pool.resize(10);
+
+// Enqueuing two promises sequentially.
 pool.enqueueMany([ promise(1), promise(2), promise(3) ]).then(console.log);
