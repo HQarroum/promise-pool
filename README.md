@@ -40,7 +40,7 @@ Use-cases associated with this module can be multiple and range from operations 
 
 ## Usage
 
-To include the `promise-pool` module into your application, you must first include it as follow.
+To include the `promise-pool-js` module into your application, you must first include it as follow.
 
 ```js
 const Pool = require('promise-pool-js');
