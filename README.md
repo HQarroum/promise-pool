@@ -43,7 +43,7 @@ Use-cases associated with this module can be multiple and range from operations 
 To include the `promise-pool` module into your application, you must first include it as follow.
 
 ```js
-const Pool = require('promise-pool');
+const Pool = require('promise-pool-js');
 ```
 
 ### Instantiating the pool
