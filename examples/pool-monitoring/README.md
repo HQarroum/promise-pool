@@ -17,10 +17,10 @@ This example features a command-line tool allowing you to control the execution 
 
 ### Options
 
- - `-p`, `--pool-size` - The size of the pool to enforce on the pool instance
- - `-s`, `--strategy` - The strategy to use on the pool (`random`, `round-robin`, `load-balancer`)
- - `-n`, `--number` - The number of promises to schedule on the pool
- 
+- `-p`, `--pool-size` - The size of the pool to enforce on the pool instance
+- `-s`, `--strategy` - The strategy to use on the pool (`random`, `round-robin`, `load-balancer`)
+- `-n`, `--number` - The number of promises to schedule on the pool
+
 ## Example
 
 ```bash
