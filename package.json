@@ -27,6 +27,6 @@
     "time-grunt": "^2.0.0"
   },
   "dependencies": {
-    "fastpriorityqueue": "^0.7.1"
+    "fastpriorityqueue": "^0.7.2"
   }
 }

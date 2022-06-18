@@ -15,6 +15,6 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.20.3",
-    "pool-watch": "^1.0.0"
+    "pool-watch": "^1.0.1"
   }
 }
